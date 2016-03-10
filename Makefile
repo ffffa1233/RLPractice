@@ -10,4 +10,4 @@ environment.o: environment.cc
 box.o: box.cc
 	$(CXX)	$(CFLAGS) -c box.cc -o box.o
 clean:
-	rm -rf experiment experiment.exe *.o result.csv results.dat
+	rm -rf experiment experiment.exe *.o result.csv results.dat valuefuncPath

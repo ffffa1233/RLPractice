@@ -16,7 +16,7 @@ observation_t *last_observation = 0;
 
 double* value_function=0;
 double sarsa_stepsize = 0.1;
-double sarsa_epsilon = 0.1;
+double sarsa_epsilon = 0.5;
 double sarsa_gamma = 1.0;
 int numActions=0;
 int numStates=0;
@@ -45,7 +45,7 @@ void agent_init(const char* task_spec){
 	value_function=(double *)calloc(numActions*numStates,sizeof(double));
 	int i;
 	for(i=0;i<numActions*numStates;i++){
-		if(i%numStates == 5){
+		if(i%numActions == 5){
 			value_function[i] = 5;
 		}
 	}
