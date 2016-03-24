@@ -30,8 +30,6 @@ const char *env_init(){
 	this_reward_observation.reward = 0;
 	this_reward_observation.terminal = 0;
 
-//	box_init();
-
 	return task_spec_string;
 }
 /*
@@ -74,21 +72,21 @@ const char* env_message(const char* inMessage){
 }
 
 int calculate_reward(double current_state){
-	if(current_state>40.1 && current_state<40.3){
+	if(current_state>=45.0 && current_state<46.0){
 		return 100;
 	}
-	if(current_state > 50.01 || current_state < -0.01){
+	if(current_state > 51.0 || current_state < 0.0){
 		return -100;
 	}
-	return -1;
+	return 100-fabs(45 - current_state);
 }
 
 int check_terminal(double current_state){
 //	printf("int check_terminal\n");
-	if(current_state>40.1 && current_state<40.3){
+	if(current_state>=45.0 && current_state<46.0){
 		return 1;
 	}
-	if(current_state > 50.01 || current_state < -0.01){
+	if(current_state > 51.0 || current_state < 0.0){
 		return 1;
 	}
 	return 0;

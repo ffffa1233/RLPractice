@@ -1,0 +1,59 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BOX_H	box.h	2;"	d
+agent_cleanup	agent.cc	/^void agent_cleanup(){$/;"	f
+agent_end	agent.cc	/^void agent_end(double reward){$/;"	f
+agent_init	agent.cc	/^void agent_init(const char* task_spec){$/;"	f
+agent_message	agent.cc	/^const char* agent_message(const char* inMessage){$/;"	f
+agent_start	agent.cc	/^const action_t *agent_start(const observation_t *this_observation){	$/;"	f
+agent_step	agent.cc	/^const action_t *agent_step(double reward, const observation_t *this_observation){$/;"	f
+apply_force	box.cc	/^void apply_force(int random_number){$/;"	f
+bodies	box.cc	/^b2Body* bodies;$/;"	v
+box_cleanup	box.cc	/^void box_cleanup(){$/;"	f
+box_init	box.cc	/^void box_init(){$/;"	f
+calculateArrayIndex	agent.cc	/^int calculateArrayIndex(double theState, int theAction){$/;"	f
+calculate_reward	environment.cc	/^int calculate_reward(double current_state){$/;"	f
+check_terminal	environment.cc	/^int check_terminal(double current_state){$/;"	f
+current_state	environment.cc	/^double current_state = 0.0;$/;"	v
+egreedy	agent.cc	/^int egreedy(double state){$/;"	f
+env_cleanup	environment.cc	/^void env_cleanup(){$/;"	f
+env_init	environment.cc	/^const char *env_init(){$/;"	f
+env_message	environment.cc	/^const char* env_message(const char* inMessage){$/;"	f
+env_start	environment.cc	/^const observation_t *env_start(){$/;"	f
+env_step	environment.cc	/^const reward_observation_terminal_t *env_step(const action_t *this_action){$/;"	f
+evaluate_agent	experiment.cc	/^evaluation_point_t *evaluate_agent(){$/;"	f
+evaluation_point_t	experiment.cc	/^}evaluation_point_t;$/;"	t	typeref:struct:__anon1	file:
+exploring_frozen	agent.cc	/^int exploring_frozen=0;$/;"	v
+extendRange	agent.cc	/^int extendRange = 1;$/;"	v
+get_position	box.cc	/^double get_position(){$/;"	f
+last_action	agent.cc	/^action_t last_action;$/;"	v
+last_observation	agent.cc	/^observation_t *last_observation = 0;$/;"	v
+load_value_function	agent.cc	/^void load_value_function(const char *fileName){$/;"	f
+main	experiment.cc	/^int main(void){$/;"	f
+main	valuefuncPath.c	/^int main(void){$/;"	f
+mean	experiment.cc	/^	double mean;$/;"	m	struct:__anon1	file:
+numActions	agent.cc	/^int numActions=0;$/;"	v
+numStates	agent.cc	/^int numStates=0;$/;"	v
+offline_demo	experiment.cc	/^void offline_demo(){$/;"	f
+policy_frozen	agent.cc	/^int policy_frozen=0;$/;"	v
+positionIterations	box.cc	/^int positionIterations = 2;$/;"	v
+print_score	experiment.cc	/^void print_score(int afterEpisodes, evaluation_point_t *the_score){$/;"	f
+randInRange	agent.cc	/^int randInRange(int max){$/;"	f
+sarsa_epsilon	agent.cc	/^double sarsa_epsilon = 0.5;$/;"	v
+sarsa_gamma	agent.cc	/^double sarsa_gamma = 1.0;$/;"	v
+sarsa_stepsize	agent.cc	/^double sarsa_stepsize = 0.1*10;$/;"	v
+save_result_csv	experiment.cc	/^void save_result_csv(evaluation_point_t *the_score[], const char *fileName){$/;"	f
+save_value_function	agent.cc	/^void save_value_function(const char *fileName){$/;"	f
+single_evaluation	experiment.cc	/^void single_evaluation(){$/;"	f
+standard_dev	experiment.cc	/^	double standard_dev;$/;"	m	struct:__anon1	file:
+this_action	agent.cc	/^action_t this_action;$/;"	v
+this_observation	environment.cc	/^static observation_t this_observation;$/;"	v	file:
+this_reward_observation	environment.cc	/^static reward_observation_terminal_t this_reward_observation;$/;"	v	file:
+timeStep	box.cc	/^float timeStep = 1.0f \/ 60.0f;$/;"	v
+value_function	agent.cc	/^double* value_function=0;$/;"	v
+velocityIterations	box.cc	/^int velocityIterations = 6;$/;"	v
+world	box.cc	/^b2World* world;$/;"	v

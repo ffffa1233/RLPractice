@@ -28,7 +28,7 @@ void box_init(){
 	myFixtureDef.shape = &polygonShape;
 	myFixtureDef.density = 1;
 
-	dynamicBodyDef.position.Set(25,1);
+	dynamicBodyDef.position.Set(45,1);
 	bodies = world->CreateBody(&dynamicBodyDef);
 	bodies->CreateFixture(&myFixtureDef);
 	

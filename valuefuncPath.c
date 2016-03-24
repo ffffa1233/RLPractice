@@ -4,21 +4,23 @@
 int main(void){
 	FILE *fp;
 	double *value_function;
-	value_function = (double*)calloc(11*51, sizeof(double));
+	int numActions = 11;
+	int numStates = 51;
+	value_function = (double*)calloc(numActions*numStates, sizeof(double));
 	printf("load policy\n");
 
 	fp = fopen("results.dat","rb");
-	fread(value_function, sizeof(double), 11*51, fp);
+	fread(value_function, sizeof(double), numActions*numStates, fp);
 	fclose(fp);
 
 	int i,j, num;
 	double max;
-	for(i=0;i<51;i++){
-		max=-10;
+	for(i=0;i<numStates;i++){
+		max=-100;
 		num=0;
-		for(j=0;j<11;j++){
-			if(max < value_function[i*11+j]){
-				max = value_function[i*11+j];
+		for(j=0;j<numActions;j++){
+			if(max < value_function[i*numActions+j]){
+				max = value_function[i*numActions+j];
 				num = j;
 			}
 		}

@@ -15,11 +15,13 @@ action_t last_action;
 observation_t *last_observation = 0;
 
 double* value_function=0;
-double sarsa_stepsize = 0.1;
+double sarsa_stepsize = 0.1*10;
 double sarsa_epsilon = 0.5;
 double sarsa_gamma = 1.0;
 int numActions=0;
 int numStates=0;
+
+int extendRange = 1;
 
 int policy_frozen=0;
 int exploring_frozen=0;
@@ -37,8 +39,8 @@ void agent_init(const char* task_spec){
 
 	last_observation=allocateRLStructPointer(0,1,0);
 
-	numActions = 11; // 0 ~ 10
-	numStates = 51; // 0 ~ 50
+	numActions = 11; // -5 ~ 5
+	numStates = 51*extendRange; // 0 ~ 50
 
 	srand(time(0));
 	
@@ -46,7 +48,7 @@ void agent_init(const char* task_spec){
 	int i;
 	for(i=0;i<numActions*numStates;i++){
 		if(i%numActions == 5){
-			value_function[i] = 5;
+			value_function[i] = 0.00001;
 		}
 	}
 	
@@ -59,18 +61,6 @@ const action_t *agent_start(const observation_t *this_observation){
 	this_action.intArray[0] = theIntAction;
 //	printf("const action_t *agent_start %d\n",theIntAction);
 //	this_action.intArray[0]=rand() % 11;
-
-//*	this_action.intArray[0]=-5;
-//*	this_action.intArray[0]=-4;
-//*	this_action.intArray[0]=-3;
-//*	this_action.intArray[0]=-2;
-//*	this_action.intArray[0]=-1;
-//	this_action.intArray[0]=0;
-//	this_action.intArray[0]=1;
-//	this_action.intArray[0]=2;
-//	this_action.intArray[0]=3;
-//*	this_action.intArray[0]=4;
-//*	this_action.intArray[0]=5;
 
 	replaceRLStruct(&this_action, &last_action);
 	replaceRLStruct(this_observation, last_observation);
@@ -209,7 +199,6 @@ int egreedy(double state){
 	for(a = 1; a < numActions; a++){
 		if(value_function[calculateArrayIndex(state,a)] > value_function[calculateArrayIndex(state,maxIndex)]) {
 			maxIndex = a;
-//			printf("maxIndex : %d\n",maxIndex);
 		}
 	}
 	return maxIndex;
@@ -228,6 +217,6 @@ int calculateArrayIndex(double theState, int theAction){
 	assert(theState<numStates);
 	assert(theAction<numActions);
 
-//	printf(" (int)theState*numActions+theAction:%d\n",(int)theState*numActions+theAction);
-	return (int)theState*numActions+theAction;
+//	printf(" (int)theState*numActions+theAction:%d,%d,%d, %d\n",(int)(theState*10), numActions, theAction,(int)theState*10*numActions+theAction);
+	return (int)(theState*extendRange)*numActions+theAction;
 }
