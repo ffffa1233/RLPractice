@@ -6,13 +6,35 @@ int main(void){
 	double *value_function;
 	int numActions = 11;
 	int numStates = 51;
-	value_function = (double*)calloc(numActions*numStates, sizeof(double));
-	printf("load policy\n");
+	int numVelocity = 31;
+
+	value_function = (double*)calloc(numActions*numStates*numVelocity, sizeof(double));
+	printf("load policy \t  state, velocity, action, Q value\n");
 
 	fp = fopen("results.dat","rb");
-	fread(value_function, sizeof(double), numActions*numStates, fp);
+	fread(value_function, sizeof(double), numActions*numStates*numVelocity, fp);
 	fclose(fp);
 
+	int i,j,k, num;
+	double max;
+	for(i=0;i<numStates;i++){
+		max = -100;
+		num = 0;
+
+		for(j=0;j<numVelocity;j++){
+			for(k=0;k<numActions;k++){
+				if(max < value_function[i*numStates + j*numVelocity + k]){
+					max = value_function[i*numStates + j*numVelocity + k];
+					num = k;
+				}
+			}
+			printf("%d, %d : %d, %lf\t",i, j, num, max);
+			if(j%6==5) 
+				printf("\n");
+		}
+		printf("\n");
+	}
+/*
 	int i,j, num;
 	double max;
 	for(i=0;i<numStates;i++){
@@ -26,6 +48,7 @@ int main(void){
 		}
 		printf("%d : %d, %lf\n",i,num,max);
 	}
+*/
 	return 0;
 }
 

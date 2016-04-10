@@ -14,9 +14,10 @@ static observation_t this_observation;
 static reward_observation_terminal_t this_reward_observation;
 
 double current_state = 0.0;
+double current_velocity = 0.0;
 
-int calculate_reward(double current_state);
-int check_terminal(double current_state);
+int calculate_reward(double current_state, double current_velocity);
+int check_terminal(double current_state, double current_velocity);
 
 const char *env_init(){
 //	printf("const char env_init\n");
@@ -25,7 +26,7 @@ const char *env_init(){
 									"[ACTIONS INT (0 ~ 10)] [REWARDS(?.? ?.?)] "
 									"[EXTRA environment(C/C++) by PSC, CBH]";
 
-	allocateRLStruct(&this_observation,0,1,0);
+	allocateRLStruct(&this_observation,0,2,0);
 	this_reward_observation.observation = &this_observation;
 	this_reward_observation.reward = 0;
 	this_reward_observation.terminal = 0;
@@ -40,7 +41,10 @@ const observation_t *env_start(){
 	box_init();
 
 	current_state = get_position();
+	current_velocity = get_velocity();
+
 	this_observation.doubleArray[0] = current_state;
+	this_observation.doubleArray[1] = current_velocity;
 	
 	return &this_observation; 
 }
@@ -51,13 +55,18 @@ const reward_observation_terminal_t *env_step(const action_t *this_action){
 	double the_reward = 0.0;
 	int force = this_action->intArray[0];
 	apply_force(force);
+	
 	current_state = get_position();
+	current_velocity = get_velocity()+15;
+	if(current_velocity>31) current_velocity = 31;
+	if(current_velocity<0) current_velocity = 0;
 
-	the_reward = calculate_reward(current_state);	
+	the_reward = calculate_reward(current_state, current_velocity);	
 //	printf("current state : %lf, apply force : %d\n",current_state, this_action->intArray[0]);
 	this_reward_observation.observation->doubleArray[0] = current_state;
+	this_reward_observation.observation->doubleArray[1] = current_velocity;
 	this_reward_observation.reward = the_reward;
-	this_reward_observation.terminal = check_terminal(current_state);
+	this_reward_observation.terminal = check_terminal(current_state, current_velocity);
 //	printf("ter:%d,pos:%lf",this_reward_observation.terminal,current_state);
 	return &this_reward_observation;
 }
@@ -71,19 +80,16 @@ const char* env_message(const char* inMessage){
 	return inMessage;
 }
 
-int calculate_reward(double current_state){
-	if(current_state>=45.0 && current_state<46.0){
-		return 100;
+int calculate_reward(double current_state, double current_velocity){
+	if (current_state>=45.0	&& current_state<46.0 && current_velocity<=15.0005 && current_velocity >=14.0095) {
+		return 100000;
 	}
-	if(current_state > 51.0 || current_state < 0.0){
-		return -100;
-	}
-	return 100-fabs(45 - current_state);
+	return -1;
 }
 
-int check_terminal(double current_state){
+int check_terminal(double current_state, double current_velocity){
 //	printf("int check_terminal\n");
-	if(current_state>=45.0 && current_state<46.0){
+	if(current_state>=45.0 && current_state<46.0 && current_velocity<=15.0005 && current_velocity>=14.0095){
 		return 1;
 	}
 	if(current_state > 51.0 || current_state < 0.0){

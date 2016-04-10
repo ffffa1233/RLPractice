@@ -15,11 +15,13 @@ action_t last_action;
 observation_t *last_observation = 0;
 
 double* value_function=0;
-double sarsa_stepsize = 0.1*10;
+double sarsa_stepsize = 0.1;
 double sarsa_epsilon = 0.5;
 double sarsa_gamma = 1.0;
+
 int numActions=0;
 int numStates=0;
+int numVelocity=0;
 
 int extendRange = 1;
 
@@ -27,8 +29,8 @@ int policy_frozen=0;
 int exploring_frozen=0;
 
 int randInRange(int max);
-int egreedy(double theState);
-int calculateArrayIndex(double theState, int theAction);
+int egreedy(double state, double velocity);
+int calculateArrayIndex(double theState, double theVelocity, int theAction);
 void save_value_function(const char *fileName);
 void load_value_function(const char *fileName);
 
@@ -37,27 +39,30 @@ void agent_init(const char* task_spec){
 	allocateRLStruct(&this_action,1,0,0);
 	allocateRLStruct(&last_action,1,0,0);
 
-	last_observation=allocateRLStructPointer(0,1,0);
+	last_observation=allocateRLStructPointer(0,2,0);
 
 	numActions = 11; // -5 ~ 5
 	numStates = 51*extendRange; // 0 ~ 50
+	
+	numVelocity = 31; // -15 ~ 15
 
 	srand(time(0));
 	
-	value_function=(double *)calloc(numActions*numStates,sizeof(double));
+	value_function=(double *)calloc(numActions*numStates*numVelocity,sizeof(double));
+/*	
 	int i;
-	for(i=0;i<numActions*numStates;i++){
+	for(i=0;i<numActions*numStates*numVelocity;i++){
 		if(i%numActions == 5){
-			value_function[i] = 0.00001;
+			value_function[i] = 0.00000001;
 		}
 	}
-	
+*/	
 }
 
 const action_t *agent_start(const observation_t *this_observation){	
 
 //	printf("const action_t *agent_start\n");	
-	int theIntAction=egreedy(this_observation->doubleArray[0]);
+	int theIntAction=egreedy(this_observation->doubleArray[0], this_observation->doubleArray[1]);
 	this_action.intArray[0] = theIntAction;
 //	printf("const action_t *agent_start %d\n",theIntAction);
 //	this_action.intArray[0]=rand() % 11;
@@ -72,19 +77,22 @@ const action_t *agent_step(double reward, const observation_t *this_observation)
 //	printf("const action_t *agent_step\n");
 	double newState=this_observation->doubleArray[0];
 	double lastState=last_observation->doubleArray[0];
+	double newVelocity = this_observation->doubleArray[1];
+	double lastVelocity = last_observation->doubleArray[1];
+//	printf("newState %lf , lastState %lf, newVelocity %lf, lastVelocity %lf\n",newState, lastState, newVelocity, lastVelocity);
 	int lastAction=last_action.intArray[0];
 
-	int newAction=egreedy(newState);
+	int newAction=egreedy(newState, newVelocity);
 //	printf("const action_t *agent_step %d\n",newAction);
 	
-	double Q_sa=value_function[calculateArrayIndex(lastState,lastAction)];
-	double Q_sprime_aprime=value_function[calculateArrayIndex(newState,newAction)];
+	double Q_sa=value_function[calculateArrayIndex(lastState,lastVelocity, lastAction)];
+	double Q_sprime_aprime=value_function[calculateArrayIndex(newState, newVelocity, newAction)];
 
 	double new_Q_sa=Q_sa + sarsa_stepsize * (reward + sarsa_gamma * Q_sprime_aprime - Q_sa);
 
 	if(!policy_frozen){
-		if(value_function[calculateArrayIndex(lastState,lastAction)] < new_Q_sa){
-			value_function[calculateArrayIndex(lastState,lastAction)]=new_Q_sa;
+		if(value_function[calculateArrayIndex(lastState, lastVelocity, lastAction)] < new_Q_sa){
+			value_function[calculateArrayIndex(lastState,lastVelocity, lastAction)]=new_Q_sa;
 		}
 	}
 	this_action.intArray[0]=newAction;
@@ -97,13 +105,15 @@ const action_t *agent_step(double reward, const observation_t *this_observation)
 void agent_end(double reward){
 //	printf("void agent_end\n");
 	double lastState=last_observation->doubleArray[0];
+	double lastVelocity=last_observation->doubleArray[1];
+
 	int lastAction=last_action.intArray[0];
 
-	double Q_sa=value_function[calculateArrayIndex(lastState,lastAction)];
+	double Q_sa=value_function[calculateArrayIndex(lastState,lastVelocity, lastAction)];
 	double new_Q_sa=Q_sa + sarsa_stepsize * (reward - Q_sa);
 	if(!policy_frozen){
-		if(value_function[calculateArrayIndex(lastState,lastAction)] < new_Q_sa){
-			value_function[calculateArrayIndex(lastState,lastAction)]=new_Q_sa;
+		if(value_function[calculateArrayIndex(lastState, lastVelocity, lastAction)] < new_Q_sa){
+			value_function[calculateArrayIndex(lastState,lastVelocity, lastAction)]=new_Q_sa;
 		}
 	}
 	clearRLStruct(&last_action);
@@ -170,7 +180,7 @@ void save_value_function(const char *fileName){
 	FILE *fp;
 	fp=fopen(fileName, "wb");
 
-	fwrite(value_function,sizeof(double),numStates*numActions,fp);
+	fwrite(value_function,sizeof(double),numStates*numActions*numVelocity,fp);
 	fclose(fp);
 }
 
@@ -178,11 +188,11 @@ void load_value_function(const char *fileName){
 	FILE *fp;
 	fp=fopen(fileName, "rb");
 
-	fread(value_function,sizeof(double),numStates*numActions,fp);
+	fread(value_function,sizeof(double),numStates*numActions*numVelocity,fp);
 	fclose(fp);
 }
 
-int egreedy(double state){
+int egreedy(double state, double velocity){
 //	printf("int egreedy numAction: %d\n",numActions);
 	int maxIndex = 0;
 	int a = 1;
@@ -197,7 +207,7 @@ int egreedy(double state){
 	/*otherwise choose the greedy action*/
 	maxIndex = 0;
 	for(a = 1; a < numActions; a++){
-		if(value_function[calculateArrayIndex(state,a)] > value_function[calculateArrayIndex(state,maxIndex)]) {
+		if(value_function[calculateArrayIndex(state,velocity,a)] > value_function[calculateArrayIndex(state,velocity,maxIndex)]) {
 			maxIndex = a;
 		}
 	}
@@ -212,11 +222,14 @@ int randInRange(int max){
 	return (int)x;
 }
 
-int calculateArrayIndex(double theState, int theAction){
-//	printf("int calculateArrayIndex(%lf, %d)",theState, theAction);
+int calculateArrayIndex(double theState, double theVelocity, int theAction){
+//	printf("int calculateArrayIndex(%lf, %lf, %d)\n",theState, theVelocity, theAction);
 	assert(theState<numStates);
 	assert(theAction<numActions);
 
-//	printf(" (int)theState*numActions+theAction:%d,%d,%d, %d\n",(int)(theState*10), numActions, theAction,(int)theState*10*numActions+theAction);
-	return (int)(theState*extendRange)*numActions+theAction;
+	//	printf(" (int)theState*numActions+theAction:%d,%d,%d, %d\n",(int)(theState*10), numActions, theAction,(int)theState*10*numActions+theAction);
+	int value = (int)theState*numActions*numVelocity+(int)theVelocity*numActions+theAction;
+//	printf("value : %d\n", value);
+	return value;
+//	return (int)(theState*extendRange)*numActions*(theVelocity)+theAction;
 }
