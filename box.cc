@@ -28,7 +28,7 @@ void box_init(){
 	myFixtureDef.shape = &polygonShape;
 	myFixtureDef.density = 1;
 
-	dynamicBodyDef.position.Set(25,1);
+	dynamicBodyDef.position.Set(35,1);
 	bodies = world->CreateBody(&dynamicBodyDef);
 	bodies->CreateFixture(&myFixtureDef);
 	
@@ -57,9 +57,10 @@ void apply_force(int random_number){
 	world->Step(timeStep, velocityIterations, positionIterations);
 
 //	printf("i:%d\n",i);
-	bodies->ApplyForce(b2Vec2(random_number*100-5*100, 0), bodies->GetWorldCenter() );
+	bodies->ApplyForce(b2Vec2((random_number-5)*100, 0), bodies->GetWorldCenter() );
 
-//	world->Step(timeStep,velocityIterations, positionIterations);
+//	bodies->ApplyLinearImpulse(b2Vec2(random_number-5, 0), bodies->GetWorldCenter() );
+	world->Step(timeStep,velocityIterations, positionIterations);
 
 }
 

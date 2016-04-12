@@ -15,11 +15,12 @@ apply_force	box.cc	/^void apply_force(int random_number){$/;"	f
 bodies	box.cc	/^b2Body* bodies;$/;"	v
 box_cleanup	box.cc	/^void box_cleanup(){$/;"	f
 box_init	box.cc	/^void box_init(){$/;"	f
-calculateArrayIndex	agent.cc	/^int calculateArrayIndex(double theState, int theAction){$/;"	f
-calculate_reward	environment.cc	/^int calculate_reward(double current_state){$/;"	f
-check_terminal	environment.cc	/^int check_terminal(double current_state){$/;"	f
+calculateArrayIndex	agent.cc	/^int calculateArrayIndex(double theState, double theVelocity, int theAction){$/;"	f
+calculate_reward	environment.cc	/^int calculate_reward(double current_state, double current_velocity){$/;"	f
+check_terminal	environment.cc	/^int check_terminal(double current_state, double current_velocity){$/;"	f
 current_state	environment.cc	/^double current_state = 0.0;$/;"	v
-egreedy	agent.cc	/^int egreedy(double state){$/;"	f
+current_velocity	environment.cc	/^double current_velocity = 0.0;$/;"	v
+egreedy	agent.cc	/^int egreedy(double state, double velocity){$/;"	f
 env_cleanup	environment.cc	/^void env_cleanup(){$/;"	f
 env_init	environment.cc	/^const char *env_init(){$/;"	f
 env_message	environment.cc	/^const char* env_message(const char* inMessage){$/;"	f
@@ -30,14 +31,17 @@ evaluation_point_t	experiment.cc	/^}evaluation_point_t;$/;"	t	typeref:struct:__a
 exploring_frozen	agent.cc	/^int exploring_frozen=0;$/;"	v
 extendRange	agent.cc	/^int extendRange = 1;$/;"	v
 get_position	box.cc	/^double get_position(){$/;"	f
+get_velocity	box.cc	/^double get_velocity(){$/;"	f
 last_action	agent.cc	/^action_t last_action;$/;"	v
 last_observation	agent.cc	/^observation_t *last_observation = 0;$/;"	v
 load_value_function	agent.cc	/^void load_value_function(const char *fileName){$/;"	f
 main	experiment.cc	/^int main(void){$/;"	f
 main	valuefuncPath.c	/^int main(void){$/;"	f
+main	valuefuncPath2.c	/^int main(void){$/;"	f
 mean	experiment.cc	/^	double mean;$/;"	m	struct:__anon1	file:
 numActions	agent.cc	/^int numActions=0;$/;"	v
 numStates	agent.cc	/^int numStates=0;$/;"	v
+numVelocity	agent.cc	/^int numVelocity=0;$/;"	v
 offline_demo	experiment.cc	/^void offline_demo(){$/;"	f
 policy_frozen	agent.cc	/^int policy_frozen=0;$/;"	v
 positionIterations	box.cc	/^int positionIterations = 2;$/;"	v
@@ -45,7 +49,7 @@ print_score	experiment.cc	/^void print_score(int afterEpisodes, evaluation_point
 randInRange	agent.cc	/^int randInRange(int max){$/;"	f
 sarsa_epsilon	agent.cc	/^double sarsa_epsilon = 0.5;$/;"	v
 sarsa_gamma	agent.cc	/^double sarsa_gamma = 1.0;$/;"	v
-sarsa_stepsize	agent.cc	/^double sarsa_stepsize = 0.1*10;$/;"	v
+sarsa_stepsize	agent.cc	/^double sarsa_stepsize = 0.1;$/;"	v
 save_result_csv	experiment.cc	/^void save_result_csv(evaluation_point_t *the_score[], const char *fileName){$/;"	f
 save_value_function	agent.cc	/^void save_value_function(const char *fileName){$/;"	f
 single_evaluation	experiment.cc	/^void single_evaluation(){$/;"	f

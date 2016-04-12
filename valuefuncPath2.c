@@ -6,7 +6,7 @@ int main(void){
 	double *value_function;
 	int numActions = 11;
 	int numStates = 51;
-	int numVelocity = 31;
+	int numVelocity = 201;
 
 	value_function = (double*)calloc(numActions*numStates*numVelocity, sizeof(double));
 	printf("load policy \t  state, velocity, action, Q value\n");
@@ -17,8 +17,10 @@ int main(void){
 
 	int i;
 
-	for(i=0;i<numActions*numStates*numVelocity;i++)
-		printf("%lf\n",value_function[i]);
+	for(i=0;i<numActions*numStates*numVelocity;i++){
+		if(value_function[i]>0) printf(">>\n");
+		//printf("%lf\t",value_function[i]);
+	}
 	return 0;
 }
 

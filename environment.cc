@@ -42,6 +42,7 @@ const observation_t *env_start(){
 
 	current_state = get_position();
 	current_velocity = get_velocity();
+	current_velocity += 50.0;
 
 	this_observation.doubleArray[0] = current_state;
 	this_observation.doubleArray[1] = current_velocity;
@@ -57,10 +58,11 @@ const reward_observation_terminal_t *env_step(const action_t *this_action){
 	apply_force(force);
 	
 	current_state = get_position();
-	current_velocity = get_velocity()+15;
-	if(current_velocity>31) current_velocity = 31;
-	if(current_velocity<0) current_velocity = 0;
+	current_velocity = get_velocity();
+	current_velocity += 50.0;
 
+	//	printf("current velocity %lf\n",current_velocity);
+	
 	the_reward = calculate_reward(current_state, current_velocity);	
 //	printf("current state : %lf, apply force : %d\n",current_state, this_action->intArray[0]);
 	this_reward_observation.observation->doubleArray[0] = current_state;
@@ -73,7 +75,6 @@ const reward_observation_terminal_t *env_step(const action_t *this_action){
 
 void env_cleanup(){
 	clearRLStruct(&this_observation);
-//	box_cleanup();
 }
 
 const char* env_message(const char* inMessage){
@@ -81,18 +82,21 @@ const char* env_message(const char* inMessage){
 }
 
 int calculate_reward(double current_state, double current_velocity){
-	if (current_state>=45.0	&& current_state<46.0 && current_velocity<=15.0005 && current_velocity >=14.0095) {
-		return 100000;
+	if (current_state>=45.0	&& current_state<46.0 && current_velocity<51.0 && current_velocity>=50.0) {
+		printf("reward 100    ");
+		return 100;
 	}
-	return -1;
+	return 1;
 }
 
 int check_terminal(double current_state, double current_velocity){
 //	printf("int check_terminal\n");
-	if(current_state>=45.0 && current_state<46.0 && current_velocity<=15.0005 && current_velocity>=14.0095){
+	if(current_state>=45.0 && current_state<46.0 && current_velocity<51.0 && current_velocity>=50.0){
+		printf("terminal\n");
 		return 1;
 	}
 	if(current_state > 51.0 || current_state < 0.0){
+//		printf("terminal2\n");
 		return 1;
 	}
 	return 0;
