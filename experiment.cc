@@ -80,7 +80,7 @@ void offline_demo(){
 	statistics[0]=this_score;
 
 	for(i=0;i<20;i++){
-		for(j=0;j<25;j++){
+		for(j=0;j<100;j++){
 			RL_episode(0);
 		}	
 		this_score = evaluate_agent();

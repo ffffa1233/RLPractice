@@ -15,7 +15,7 @@ action_t last_action;
 observation_t *last_observation = 0;
 
 double* value_function=0;
-double sarsa_stepsize = 0.1;
+double sarsa_stepsize = 1;
 double sarsa_epsilon = 0.5;
 double sarsa_gamma = 1.0;
 
@@ -114,13 +114,14 @@ void agent_end(double reward){
 //	printf("void agent_end\n");
 	double lastState=last_observation->doubleArray[0];
 	double lastVelocity=last_observation->doubleArray[1];
-
+if(reward==100) printf("laststate %lf, lastvel %lf, rewward %lf  \n",lastState,lastVelocity, reward);
 	int lastAction=last_action.intArray[0];
 
 	double Q_sa=value_function[calculateArrayIndex(lastState,lastVelocity, lastAction)];
 	double new_Q_sa=Q_sa + sarsa_stepsize * (reward - Q_sa);
 	if(!policy_frozen){
 		if(value_function[calculateArrayIndex(lastState, lastVelocity, lastAction)] < new_Q_sa){
+			printf("value function %lf new Qsa %lf\n", value_function[calculateArrayIndex(lastState, lastVelocity, lastAction)], new_Q_sa);
 			value_function[calculateArrayIndex(lastState,lastVelocity, lastAction)]=new_Q_sa;
 		}
 	}

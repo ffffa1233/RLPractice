@@ -82,8 +82,9 @@ const char* env_message(const char* inMessage){
 }
 
 int calculate_reward(double current_state, double current_velocity){
-	if (current_state>=45.0	&& current_state<46.0 && current_velocity<51.0 && current_velocity>=50.0) {
-		printf("reward 100    ");
+//	if (current_state>=45.0	&& current_state<46.0 && current_velocity<51.0 && current_velocity>=50.0) {
+	if((int)current_state==45 && (int)current_velocity==50){
+		printf("reward 100 vel %lf ", current_velocity);
 		return 100;
 	}
 	return 1;
@@ -91,7 +92,8 @@ int calculate_reward(double current_state, double current_velocity){
 
 int check_terminal(double current_state, double current_velocity){
 //	printf("int check_terminal\n");
-	if(current_state>=45.0 && current_state<46.0 && current_velocity<51.0 && current_velocity>=50.0){
+//	if(current_state>=45.0 && current_state<46.0 && current_velocity<51.0 && current_velocity>=50.0){
+	if((int)current_state==45 && (int)current_velocity==50){
 		printf("terminal\n");
 		return 1;
 	}
