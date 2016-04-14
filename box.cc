@@ -1,10 +1,9 @@
 #include "box.h"
-#include <stdio.h>
-#include <Box2D/Box2D.h>
 
 b2Body* bodies;
 b2Vec2 gravity(0.0f, -10.0f);
 b2World* world;
+
 float timeStep = 1.0f / 60.0f;
 int velocityIterations = 6;
 int positionIterations = 2;
@@ -34,7 +33,7 @@ void box_init(){
 	
 	/* staticBody 위치값 세팅 */
 	staticBodyDef.position.Set(0, 0);
-	polygonShape.SetAsEdge(b2Vec2(-100000000000, 0), b2Vec2(100000000000, 0) );
+	polygonShape.SetAsEdge(b2Vec2(-10000, 0), b2Vec2(10000, 0) );
 	world->CreateBody(&staticBodyDef)->CreateFixture(&myFixtureDef);
 }
 
@@ -60,11 +59,9 @@ void apply_force(int force){
 	world->Step(timeStep, velocityIterations, positionIterations);
 
 	bodies->ApplyForce(b2Vec2((force-5)*100, 0), bodies->GetWorldCenter() );
-
-//	bodies->ApplyLinearImpulse(b2Vec2(random_number-5, 0), bodies->GetWorldCenter() );
 }
 
-/* Box2D 삭제 free */
+/* Box2D 해제  */
 void box_cleanup(){
 	delete world;
 }

@@ -24,13 +24,13 @@ int main(void){
 			max = -100;
 			num = 0;
 			for(k=0;k<numActions;k++){
-				if(max < value_function[i*numStates + j*numVelocity + k]){
-					max = value_function[i*numStates + j*numVelocity + k];
+				if(max < value_function[i*numActions*numVelocity + j*numActions + k]){
+					max = value_function[i*numActions*numVelocity + j*numActions + k];
 					num = k;
 				}
 			}
             if(max!=0){
-			    printf("%d, %d : %d, %.0lf\t",i, j, num, max);
+			    printf("%d, %d : %d, %lf\t",i, j, num, max);
                 enter++;
                 if(enter%5 == 4)
                     printf("\n");

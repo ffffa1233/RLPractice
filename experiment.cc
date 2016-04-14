@@ -64,7 +64,6 @@ void save_result_csv(evaluation_point_t *the_score[], const char *fileName){
 }
 
 void offline_demo(){
-//	printf("void offline_demo\n");
 	int i=0;
 	int j=0;
 
@@ -78,8 +77,7 @@ void offline_demo(){
 
 	for(i=0;i<20;i++){
 		/* j번 학습 */
-		for(j=0;j<20;j++){
-			printf("j : %d\n",j);
+		for(j=0;j<10;j++){
 			RL_episode(0);
 		}
 
@@ -101,7 +99,6 @@ void offline_demo(){
  평균과 표준편차 값을 계산합니다.
 */
 evaluation_point_t *evaluate_agent(){
-//	printf("evaluation_point_t *evaluate_agent\n");
 	int i=0;
 	double sum=0;
 	double sum_of_squares=0;
