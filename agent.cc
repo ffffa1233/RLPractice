@@ -168,16 +168,6 @@ void save_value_function(const char *fileName){
 	fp=fopen(fileName, "wb");
 
 	fwrite(value_function,sizeof(double),numStates*numActions*numVelocity,fp);
-	int i,j,k;
-	for(i=0;i<numStates;i++){
-		for(j=0;j<numVelocity;j++){
-			for(k=0;k<numActions;k++){
-				if(value_function[k+j*numActions+i*numActions*numVelocity]>0.00000001){
-					printf("%d\t%d\t%d\t%lf\n",i,j,k,value_function[k+j*numActions+i*numActions*numVelocity]);
-				}
-			}
-		}
-	}
 	fclose(fp);
 }
 
