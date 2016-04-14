@@ -1,13 +1,7 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
-#include <assert.h>
 #include <rlglue/Agent_common.h>
 #include <rlglue/utils/C/RLStruct_util.h>
 #include <rlglue/utils/C/TaskSpec_Parser.h>
 
-#include <Box2D/Box2D.h>
 #include "box.h"
 
 action_t this_action;
@@ -15,14 +9,14 @@ action_t last_action;
 observation_t *last_observation = 0;
 
 double* value_function=0;
-double sarsa_stepsize = 1;
+double sarsa_stepsize = 0.1;
 double sarsa_epsilon = 0.5;
 double sarsa_gamma = 1.0;
 
 int numActions=0;
 int numStates=0;
 int numVelocity=0;
-int cnt = 0;
+
 int extendRange = 1;
 
 int policy_frozen=0;
@@ -78,12 +72,10 @@ const action_t *agent_step(double reward, const observation_t *this_observation)
 	//	printf("const action_t *agent_step\n");
 
 	double newState=this_observation->doubleArray[0];
-	double lastState=last_observation->doubleArray[0];
 	double newVelocity = this_observation->doubleArray[1];
+	double lastState=last_observation->doubleArray[0];
 	double lastVelocity = last_observation->doubleArray[1];
 
-//	printf("newState %lf , lastState %lf, newVelocity %lf, lastVelocity %lf\n",newState, lastState, newVelocity, lastVelocity);
-	
 	int lastAction=last_action.intArray[0];
 
 	int newAction=egreedy(newState, newVelocity);
@@ -94,11 +86,11 @@ const action_t *agent_step(double reward, const observation_t *this_observation)
 	
 	double new_Q_sa=Q_sa + sarsa_stepsize * (reward + sarsa_gamma * Q_sprime_aprime - Q_sa);
 
-	//	printf("%lf, %lf , %lf, %lf, %lf, %lf\n",new_Q_sa, Q_sa, sarsa_stepsize, reward, sarsa_gamma, Q_sprime_aprime);
-	
+	/*
+	   학습하지 않을 때 : policy_frozen=1
+	   학습하고 있을 때 : policy_frozen=0
+	*/
 	if(!policy_frozen){
-			//printf("value function %lf, new Q sa %lf\n",value_function[calculateArrayIndex(lastState, lastVelocity,lastAction)], new_Q_sa);
-
 		if(value_function[calculateArrayIndex(lastState, lastVelocity, lastAction)] < new_Q_sa){
 			value_function[calculateArrayIndex(lastState,lastVelocity, lastAction)]=new_Q_sa;
 		}
@@ -119,9 +111,14 @@ if(reward==100) printf("laststate %lf, lastvel %lf, rewward %lf  \n",lastState,l
 
 	double Q_sa=value_function[calculateArrayIndex(lastState,lastVelocity, lastAction)];
 	double new_Q_sa=Q_sa + sarsa_stepsize * (reward - Q_sa);
+
+	/*
+	   학습하지 않을 때 : policy_frozen=1
+	   학습하고 있을 때 : policy_frozen=0
+	*/
 	if(!policy_frozen){
 		if(value_function[calculateArrayIndex(lastState, lastVelocity, lastAction)] < new_Q_sa){
-			printf("value function %lf new Qsa %lf\n", value_function[calculateArrayIndex(lastState, lastVelocity, lastAction)], new_Q_sa);
+	//		printf("value function %lf new Qsa %lf\n", value_function[calculateArrayIndex(lastState, lastVelocity, lastAction)], new_Q_sa);
 			value_function[calculateArrayIndex(lastState,lastVelocity, lastAction)]=new_Q_sa;
 		}
 	}
@@ -233,10 +230,12 @@ int egreedy(double state, double velocity){
 		}
 	}
 
-	if(value_function[maxIndex]==0.0){
+	if(value_function[calculateArrayIndex(state,velocity,maxIndex)]==0.0){
 		return randInRange(numActions-1);
 	}
-cnt++;printf("max index %d\n",4/0);
+
+	//printf("max index %d\n",4/0);
+	
 	return maxIndex;
 }
 

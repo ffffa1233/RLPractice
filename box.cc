@@ -9,36 +9,37 @@ float timeStep = 1.0f / 60.0f;
 int velocityIterations = 6;
 int positionIterations = 2;
 
-//initialize box2d 
+/* Box2D 초기화 */
 void box_init(){
-//	printf("void box_init\n");
 	world = new b2World(gravity, true);
 
-	//body definition
+	/* body 정의 */
 	b2BodyDef dynamicBodyDef, staticBodyDef;
 	dynamicBodyDef.type = b2_dynamicBody;
 	staticBodyDef.type = b2_staticBody;
 
-	//shape definition
+	/* shape 정의 */
 	b2PolygonShape polygonShape;
 	polygonShape.SetAsBox(1, 1);
 
-	//fixture defnition
+	/* fixture 정의 */
 	b2FixtureDef myFixtureDef;
 	myFixtureDef.shape = &polygonShape;
 	myFixtureDef.density = 1;
 
+	/* dynamicBody 위치값 (35,1)으로 세팅 */
 	dynamicBodyDef.position.Set(35,1);
 	bodies = world->CreateBody(&dynamicBodyDef);
 	bodies->CreateFixture(&myFixtureDef);
 	
+	/* staticBody 위치값 세팅 */
 	staticBodyDef.position.Set(0, 0);
 	polygonShape.SetAsEdge(b2Vec2(-100000000000, 0), b2Vec2(100000000000, 0) );
 	world->CreateBody(&staticBodyDef)->CreateFixture(&myFixtureDef);
 }
 
+/* bodies의 x축 위치값을 받아옵니다. */
 double get_position(){
-//	printf("double get_position\n");
 	world->Step(timeStep, velocityIterations, positionIterations);
 	double posx=0.0;
 
@@ -46,24 +47,24 @@ double get_position(){
 	return posx;
 }
 
+/* bodies의 x축 속도값을 받아옵니다. */
 double get_velocity(){
 	world->Step(timeStep, velocityIterations, positionIterations);
-	b2Vec2 vel = bodies->GetLinearVelocity();
-	return vel.x;
+
+	double velx = bodies->GetLinearVelocity().x;
+	return velx;
 }
 
-void apply_force(int random_number){
-//	printf("void apply_force\n");
+/* bodies에 force값 만큼 힘을 가합니다. */
+void apply_force(int force){
 	world->Step(timeStep, velocityIterations, positionIterations);
 
-//	printf("i:%d\n",i);
-	bodies->ApplyForce(b2Vec2((random_number-5)*100, 0), bodies->GetWorldCenter() );
+	bodies->ApplyForce(b2Vec2((force-5)*100, 0), bodies->GetWorldCenter() );
 
 //	bodies->ApplyLinearImpulse(b2Vec2(random_number-5, 0), bodies->GetWorldCenter() );
-	world->Step(timeStep,velocityIterations, positionIterations);
-
 }
 
+/* Box2D 삭제 free */
 void box_cleanup(){
 	delete world;
 }

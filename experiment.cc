@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <math.h>
 #include <rlglue/RL_glue.h>
 
-#include <Box2D/Box2D.h>
 #include "box.h"
 
 typedef struct {
@@ -74,17 +71,22 @@ void offline_demo(){
 	evaluation_point_t *this_score=0;
 	evaluation_point_t *statistics[21];
 	
+	/* 학습 전 결과값 출력 */
 	this_score = evaluate_agent();
-
 	print_score(0,this_score);
 	statistics[0]=this_score;
 
 	for(i=0;i<20;i++){
-		for(j=0;j<100;j++){
+		/* j번 학습 */
+		for(j=0;j<20;j++){
+			printf("j : %d\n",j);
 			RL_episode(0);
-		}	
+		}
+
+		/* 학습 후 결과값 출력 */
 		this_score = evaluate_agent();
 		print_score((i+1)*25,this_score);
+
 		statistics[i+1]=this_score;
 	}
 	save_result_csv(statistics,"result.csv");
@@ -94,6 +96,10 @@ void offline_demo(){
 	}
 }
 
+/*
+ 이 함수는 learning없이 value_function 배열에 있는 값을 읽어서
+ 평균과 표준편차 값을 계산합니다.
+*/
 evaluation_point_t *evaluate_agent(){
 //	printf("evaluation_point_t *evaluate_agent\n");
 	int i=0;
@@ -104,7 +110,7 @@ evaluation_point_t *evaluate_agent(){
 	double variance;
 	int n=10;
 	evaluation_point_t *eval_point=0;
-	
+
 	RL_agent_message("freeze learning");
 	for(i=0;i<n;i++){
 		RL_episode(5000);
@@ -112,6 +118,8 @@ evaluation_point_t *evaluate_agent(){
 		sum+=this_return;
 		sum_of_squares+=this_return*this_return;
 	}
+
+	/* 평균과 표준편차를 계산합니다.*/
 	mean = sum/(double)n;
 	variance = (sum_of_squares - (double)n*mean*mean)/((double)n-1.0f);
 	eval_point = (evaluation_point_t*)malloc(sizeof(evaluation_point_t));
@@ -122,6 +130,9 @@ evaluation_point_t *evaluate_agent(){
 	return eval_point;
 }
 
+/*
+   한번 evaluate_agent 함수를 호출하고 결과값을 출력합니다.
+*/
 void single_evaluation(){
 	evaluation_point_t *this_score=0;
 	this_score = evaluate_agent();
@@ -129,7 +140,9 @@ void single_evaluation(){
 	free(this_score);
 }
 
+/*
+   evaluate_point_t 구조체에 있는 값을 출력합니다.
+*/
 void print_score(int afterEpisodes, evaluation_point_t *the_score){
-//	printf("void print_score\n");
 	printf("%d\t\t%.2f\t\t%.2f\n", afterEpisodes, the_score->mean, the_score->standard_dev);
 }

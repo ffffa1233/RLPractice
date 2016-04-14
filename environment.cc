@@ -1,13 +1,6 @@
-#include <string.h>
-#include <stdio.h>
-#include <math.h>
-#include <time.h>
-#include <stdlib.h>
-#include <assert.h>
 #include <rlglue/Environment_common.h>
 #include <rlglue/utils/C/RLStruct_util.h>
 
-#include <Box2D/Box2D.h>
 #include "box.h"
 
 static observation_t this_observation;
