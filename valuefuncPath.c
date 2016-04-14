@@ -16,8 +16,10 @@ int main(void){
 	fclose(fp);
 
 	int i,j,k, num;
+    int enter;
 	double max;
 	for(i=0;i<numStates;i++){
+        enter = 0;
 		for(j=0;j<numVelocity;j++){
 			max = -100;
 			num = 0;
@@ -27,11 +29,14 @@ int main(void){
 					num = k;
 				}
 			}
-			printf("%d, %d : %d, %lf\t",i, j, num, max);
-			if(j%6==5) 
-				printf("\n");
+            if(max!=0){
+			    printf("%d, %d : %d, %.0lf\t",i, j, num, max);
+                enter++;
+                if(enter%5 == 4)
+                    printf("\n");
+            }
 		}
-		printf("\n");
+		printf("\n----------------------------------------------------------------------\n");
 	}
 /*
 	int i,j, num;
