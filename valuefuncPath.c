@@ -5,8 +5,8 @@ int main(void){
 	FILE *fp;
 	double *value_function;
 	int numActions = 11;
-	int numStates = 51;
-	int numVelocity = 101;
+	int numStates = 510;
+	int numVelocity = 1010;
 
 	value_function = (double*)calloc(numActions*numStates*numVelocity, sizeof(double));
 	printf("load policy \t  state, velocity, action, Q value\n");

@@ -68,28 +68,28 @@ void offline_demo(){
 	int j=0;
 
 	evaluation_point_t *this_score=0;
-	evaluation_point_t *statistics[21];
+	evaluation_point_t *statistics[41];
 	
 	/* 학습 전 결과값 출력 */
 	this_score = evaluate_agent();
 	print_score(0,this_score);
 	statistics[0]=this_score;
 
-	for(i=0;i<20;i++){
+	for(i=0;i<40;i++){
 		/* j번 학습 */
-		for(j=0;j<10;j++){
+		for(j=0;j<250;j++){
 			RL_episode(0);
 		}
 
 		/* 학습 후 결과값 출력 */
 		this_score = evaluate_agent();
-		print_score((i+1)*25,this_score);
+		print_score((i+1)*250,this_score);
 
 		statistics[i+1]=this_score;
 	}
 	save_result_csv(statistics,"result.csv");
 
-	for(i=0;i<21;i++){
+	for(i=0;i<41;i++){
 		free(statistics[i]);
 	}
 }
@@ -99,18 +99,18 @@ void offline_demo(){
  평균과 표준편차 값을 계산합니다.
 */
 evaluation_point_t *evaluate_agent(){
-	int i=0;
-	double sum=0;
-	double sum_of_squares=0;
-	double this_return=0;
+	int i = 0;
+	double sum = 0;
+	double sum_of_squares = 0;
+	double this_return = 0;
 	double mean;
 	double variance;
-	int n=10;
-	evaluation_point_t *eval_point=0;
+	int n = 250;
+	evaluation_point_t *eval_point = 0;
 
 	RL_agent_message("freeze learning");
 	for(i=0;i<n;i++){
-		RL_episode(5000);
+		RL_episode(0);
 		this_return = RL_return();
 		sum+=this_return;
 		sum_of_squares+=this_return*this_return;

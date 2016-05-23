@@ -10,6 +10,9 @@ int positionIterations = 2;
 
 /* Box2D 초기화 */
 void box_init(){
+	/* 임의의 위치값 */
+	double rand_state = (rand() % 510) * 0.1;
+
 	world = new b2World(gravity, true);
 
 	/* body 정의 */
@@ -26,8 +29,8 @@ void box_init(){
 	myFixtureDef.shape = &polygonShape;
 	myFixtureDef.density = 1;
 
-	/* dynamicBody 위치값 (35,1)으로 세팅 */
-	dynamicBodyDef.position.Set(35,1);
+	/* dynamicBody 임의 위치값 으로 세팅 */
+	dynamicBodyDef.position.Set(rand_state,1);
 	bodies = world->CreateBody(&dynamicBodyDef);
 	bodies->CreateFixture(&myFixtureDef);
 	
@@ -35,6 +38,9 @@ void box_init(){
 	staticBodyDef.position.Set(0, 0);
 	polygonShape.SetAsEdge(b2Vec2(-10000, 0), b2Vec2(10000, 0) );
 	world->CreateBody(&staticBodyDef)->CreateFixture(&myFixtureDef);
+
+	/* 힘 초기화 */
+	world->ClearForces();
 }
 
 /* bodies의 x축 위치값을 받아옵니다. */

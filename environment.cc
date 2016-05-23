@@ -41,6 +41,7 @@ const observation_t *env_start(){
 
 const reward_observation_terminal_t *env_step(const action_t *this_action){
 	int force = this_action->intArray[0];
+	
 	apply_force(force);
 	
 	current_state = get_position();

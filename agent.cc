@@ -13,6 +13,8 @@ double sarsa_stepsize = 0.1*10;
 double sarsa_epsilon = 0.5;
 double sarsa_gamma = 1.0*0.5;
 
+int extends = 1;
+
 int numActions=0;
 int numStates=0;
 int numVelocity=0;
@@ -33,9 +35,9 @@ void agent_init(const char* task_spec){
 	last_observation=allocateRLStructPointer(0,2,0);
 
 	numActions = 11; // -5 ~ 5
-	numStates = 51; // 0 ~ 50
+	numStates = 51*extends; // 0.0 ~ 50.9
 	
-	numVelocity = 101; // -50 ~ 50
+	numVelocity = 101*extends; // -50.0 ~ 50.9
 
 	srand(time(0));
 	
@@ -207,5 +209,5 @@ int calculateArrayIndex(double theState, double theVelocity, int theAction){
 	assert(theState<numStates);
 	assert(theAction<numActions);
 
-	return ((int)theState)*numActions*numVelocity+((int)theVelocity)*numActions+theAction;
+	return ((int)(theState*extends))*numActions*numVelocity+((int)(theVelocity*extends))*numActions+theAction;
 }
